@@ -1,0 +1,3 @@
+#!/bin/bash
+rm -f /usr/bin/php
+ln -s "/etc/php/$1/bin/php" "/usr/bin/php"
