@@ -1,10 +1,21 @@
 #!/bin/bash
+set -e
+
 if [ "$1" = "latest" ]
 then
 	version=7.4
 else
-	version=$1
+	version="$1"
 fi
 
-rm -f /usr/bin/php
-ln -s "/etc/php/$version/bin/php" "/usr/bin/php"
+php_bin="/etc/php/$version/bin/php"
+
+if test -f $php_bin
+then
+	rm -f /usr/bin/php
+	ln -s "$php_bin" "/usr/bin/php"
+	echo "Successfully linked $php_bin"
+else
+	echo "Error linking $php_bin: version doesn't exist"
+	exit 1
+fi
