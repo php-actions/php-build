@@ -1,3 +1,10 @@
 #!/bin/bash
+if [ "$1" = "latest" ]
+then
+	version=7.4
+else
+	version=$1
+fi
+
 rm -f /usr/bin/php
-ln -s "/etc/php/$1/bin/php" "/usr/bin/php"
+ln -s "/etc/php/$version/bin/php" "/usr/bin/php"
