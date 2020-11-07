@@ -8,6 +8,13 @@ else
 	version="$1"
 fi
 
+# If there is no decimal, let's add one back. This is probably thanks to the
+# devilish ways of Yaml. php_version: 8.0 is kindly converted to php_version: 8
+# Thanks, Yaml!
+if [[ $version != *"."* ]]; then
+	version="$version.0"
+fi
+
 php_bin="/etc/php/$version/bin/php"
 
 if test -f $php_bin
