@@ -1,13 +1,15 @@
 FROM ubuntu:latest
 
-RUN apt-get update
+RUN apt-get update --fix-missing
+RUN apt-get install -y libkrb5-dev
+RUN apt-get install -y libc-client-dev
 RUN apt-get install -y git
 RUN git clone git://github.com/php-build/php-build /tmp/php-build
 WORKDIR /tmp/php-build
 RUN ./install-dependencies.sh
 RUN ./install.sh
 # Latest stable and latest snapshot versions:
-ENV PHP_BUILD_CONFIGURE_OPTS="--with-libxml"
+ENV PHP_BUILD_CONFIGURE_OPTS="--with-libxml --with-curl --with-zip --with-mysqli --with-pdo-mysql --enable-bcmath --enable-gd --enable-intl --enable-mbstring"
 RUN php-build 7.4.10 /etc/php/7.4
 # Other supported:
 RUN php-build 8.0snapshot /etc/php/8.0
