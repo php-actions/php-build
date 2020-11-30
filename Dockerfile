@@ -1,9 +1,7 @@
 FROM ubuntu:latest
 
 RUN apt-get update --fix-missing
-RUN apt-get install -y libkrb5-dev
-RUN apt-get install -y libc-client-dev
-RUN apt-get install -y git
+RUN apt-get install -y libkrb5-dev libc-client-dev git
 RUN git clone git://github.com/php-build/php-build /tmp/php-build
 WORKDIR /tmp/php-build
 RUN ./install-dependencies.sh
