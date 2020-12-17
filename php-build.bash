@@ -88,10 +88,9 @@ echo "$docker_tag" > ./docker_tag
 # been pushed previously, this image should take preference and a new image
 # will not need to be built.
 echo "Pulling $docker_tag"
-docker pull "$docker_tag"
 
 # No need to continue building the image if the pull was successful.
-if [ $? -eq 0 ]
+if docker pull "$docker_tag";
 then
 	exit
 fi
