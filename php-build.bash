@@ -84,9 +84,6 @@ dockerfile_unique="${dockerfile_unique,,}"
 docker_tag="docker.pkg.github.com/${GITHUB_REPOSITORY}/php-actions_${base_repo}:${dockerfile_unique}"
 echo "$docker_tag" > ./docker_tag
 
-github_action_path=$(dirname "$0")
-cd "${github_action_path}"
-
 # Attempt to pull the existing Docker image, if it exists. If the image has
 # been pushed previously, this image should take preference and a new image
 # will not need to be built.
