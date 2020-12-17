@@ -1,48 +1,48 @@
-# Choose between PHP versions and installed extensions in your Github Actions.
+# Fast builds for repositories using php-actions.
 
-This is a base image used by all php-actions repositories. It contains all compiled versions of PHP that are currently supported:
+v1 of this repository used a totally different architecture and had different goals to the current version. Previously, a customised Dockerfile was used as the base for all php-actions repositories, but now php-actions workflows run as [composite run steps][composite], building a customised docker image per-application, based off the official PHP script.
 
-* 8.0
-* 7.4 **(latest)**
-* 7.3
-* 7.2
-* 7.1
+The bash script within this repository is run as [composite run steps][composite] in [php-actions repositories][php-actions]. It builds a minimal docker image for running each particular php-action job and pushes the built image as a package, stored on the repository that is using the action.
 
-The default version to be put on the PATH is `latest`. To change the version of PHP that is on the path, use the `switch-php-version- and pass the version number as the only argument. For example, to switch to PHP version 8.0:
+You do not need to know the following information if you want to use a php-actions Github Action within your own repository - only if you are planning on contributing to the php-actions base Docker image.
 
-```bash
-switch-php-version 8.0
-```
+Environment variables
+---------------------
 
-The following extensions are enabled by default:
+The following environment variables must be passed to the composite run step:
 
-* libxml
-* curl
-* zip
-* mysqli
-* pdo-mysql
-* bcmath
-* gd
-* intl
-* mbstring
++ `GITHUB_ACTOR` - The name of the person or app that initiated the workflow, for example: `g105b`. This user will be used to authenticate the pull/push of the Docker image.
++ `GITHUB_REPOSITORY` - The owner and repository name of the repository running the action, for example: `phpgt/database`. This is where the built image will be pushed to as a package.
++ `ACTION_TOKEN` - The Github PAT used to authenticate the `docker login` step. This is probably taken directly from the `github.token` secret, which is generated automatically by the action runner.
++ `ACTION_PHP_VERSION` - The semver version number string of the required PHP version to use.
 
-If you require any other extensions, please [open an issue][issues] and, if possible, describe the way in which the extension should be compiled.
+The following environment variables are optionally passed to the composite run step:
 
-Known limitations
------------------
++ `ACTION_PHP_EXTENSIONS` - A space-separated list of extensions to enable.
 
-### Speed
+Choosing the PHP version
+------------------------
 
-Currently the image is based off `ubuntu:latest`, to match the base image that many Github Actions use. Then there are multiple versions of PHP compiled within the image, which creates a larger base image than usual. This can cause Github Actions to run slowly, as for some reason some workflows insist on ignoring any caching of image layers. If you know how to improve the speed, please [let us know in the issue tracker][issues]. 
+The `ACTION_PHP_VERSION` environment variable must be passed to the composite run step. This string must match any of the [officially supported PHP version numbers][tag-list] (version number only, with no derivative text, e.g. `8.0.1` or `8` rather than `8-cli`).
 
-### Enabling/disabling extensions
+The official Alpine CLI build of the requested version will be used as the image's base. 
 
-The list of extensions above are enabled by default, but it might be an improvement to only enable extensions that are required, by adjusting the php.ini file on-the-fly. This is just an idea for now, but if it sounds like it would be an improvement, please let us know your suggestions [in the issue tracker][issues].
-
-Supporting future development
+Enabling/disabling extensions
 -----------------------------
+
+The `ACTION_PHP_EXTENSIONS` environment variable can be passed to the composite run step. This string must be a space separated list of all extension names required by the running action's repository. The names of the extensions may also include a version number to use.
+
+For example: `gd xdebug-2.9.7 zip`.
+
+The functionality of building PHP extensions is provided by [mlocati's docker-php-extension-installer repository][mlocati]. A full list of supported extension names is available within the readme: https://github.com/mlocati/docker-php-extension-installer#supported-php-extensions
+
+***
 
 If you found this repository helpful, please consider [sponsoring the developer][sponsor].
 
+[composite]: https://github.blog/changelog/2020-08-07-github-actions-composite-run-steps/
+[php-actions]: https://github.com/php-actions
+[tag-list]: https://github.com/docker-library/docs/blob/master/php/README.md#supported-tags-and-respective-dockerfile-links
+[mlocati]: https://github.com/mlocati/docker-php-extension-installer
 [issues]: https://github.com/php-actions/php-build/issues
 [sponsor]: https://github.com/sponsors/g105b
