@@ -6,6 +6,7 @@ if [ "$#" -ne 1 ]; then
     echo "Must pass argument 1: the name of the action currently running"
     exit 1
 fi
+echo "Running php-build $1"
 
 if [ -z "$GITHUB_ACTOR" ]
 then
