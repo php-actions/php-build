@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+printenv
+
 # Check for required variables:
 if [ "$#" -ne 1 ]; then
     echo "Must pass argument 1: the name of the action currently running"
