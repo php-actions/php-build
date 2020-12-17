@@ -1,7 +1,12 @@
 #!/bin/bash
 set -e
 
-# Check for required environment variables:
+# Check for required variables:
+if [ "$#" -ne 1 ]; then
+    echo "Must pass argument 1: the name of the action currently running"
+    exit 1
+fi
+
 if [ -z "$GITHUB_ACTOR" ]
 then
 	echo "Error: GITHUB_ACTOR variable not set"
@@ -37,11 +42,6 @@ fi
 base_image="${base_image}cli-alpine"
 dockerfile="FROM ${base_image}
 RUN apk add --update --no-cache zip git bash"
-
-if [ "$#" -ne 1 ]; then
-    echo "Must pass argument 1: the name of the action currently running"
-    exit 1
-fi
 
 base_repo="$1"
 
