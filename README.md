@@ -34,7 +34,7 @@ The `ACTION_PHP_EXTENSIONS` environment variable can be passed to the composite 
 
 For example: `gd xdebug-2.9.7 zip`.
 
-The functionality of building PHP extensions is provided by [mlocati's docker-php-extension-installer repository][mlocati]. A full list of supported extension names is available within the readme: https://github.com/mlocati/docker-php-extension-installer#supported-php-extensions
+The functionality of building PHP extensions is provided by [mlocati's docker-php-extension-installer repository][mlocati]. A full list of supported extension names is [available within the readme][mlocati-readme].
 
 ***
 
@@ -44,5 +44,6 @@ If you found this repository helpful, please consider [sponsoring the developer]
 [php-actions]: https://github.com/php-actions
 [tag-list]: https://github.com/docker-library/docs/blob/master/php/README.md#supported-tags-and-respective-dockerfile-links
 [mlocati]: https://github.com/mlocati/docker-php-extension-installer
+[mlocati-readme]: https://github.com/mlocati/docker-php-extension-installer#supported-php-extensions
 [issues]: https://github.com/php-actions/php-build/issues
 [sponsor]: https://github.com/sponsors/g105b
