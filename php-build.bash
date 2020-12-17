@@ -38,7 +38,7 @@ fi
 base_image="php:"
 if [ "$ACTION_PHP_VERSION" != "latest" ]
 then
-	base_image="${base_image}-${ACTION_PHP_VERSION}-"
+	base_image="${base_image}${ACTION_PHP_VERSION}-"
 fi
 base_image="${base_image}cli-alpine"
 dockerfile="FROM ${base_image}
