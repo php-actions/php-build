@@ -48,7 +48,7 @@ base_repo="$1"
 
 # We log into the Github docker repository on behalf of the user that is
 # running the action (this could be anyone, outside of the php-actions organisation).
-echo "${ACTION_TOKEN}" | docker login docker.pkg.github.com -u "${GITHUB_ACTOR}" --password-stdin
+echo "${ACTION_TOKEN}" | docker login docker.pkg.github.com -u "${GITHUB_ACTOR}" --password-stdin >> output.log 2>&1
 
 # If there are any extensions to be installed, we do this using the
 # install-php-extensions tool. If there are not extensions required, we don't
@@ -87,7 +87,7 @@ echo "$docker_tag" > ./docker_tag
 # Attempt to pull the existing Docker image, if it exists. If the image has
 # been pushed previously, this image should take preference and a new image
 # will not need to be built.
-echo "Pulling $docker_tag"
+echo "Pulling $docker_tag" >> output.log 2>&1
 
 # No need to continue building the image if the pull was successful.
 if docker pull "$docker_tag";
@@ -95,14 +95,15 @@ then
 	exit
 fi
 
+echo "Building PHP $ACTION_PHP_VERSION with extensions: $ACTION_PHP_EXTENSIONS ..."
 # Save the dockerfile to a physical file on disk, then build the image, tagging
 # it with the unique tag. If the layers are already built, there should be no
 # need to re-build, and the `docker build` step should use the cached layers of
 # what has just been pulled.
 echo "$dockerfile" > Dockerfile
-echo "Dockerfile:"
-echo "$dockerfile"
-docker build --tag "$docker_tag" --cache-from "$docker_tag" .
+echo "Dockerfile:" >> output.log 2>&1
+echo "$dockerfile" >> output.log 2>&1
+docker build --tag "$docker_tag" --cache-from "$docker_tag" . >> output.log 2>&1
 # Update the user's repository with the customised docker image, ready for the
 # next Github Actions run.
-docker push "$docker_tag"
+docker push "$docker_tag" >> output.log 2>&1
