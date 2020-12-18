@@ -90,7 +90,7 @@ echo "$docker_tag" > ./docker_tag
 echo "Pulling $docker_tag" >> output.log 2>&1
 
 # No need to continue building the image if the pull was successful.
-if docker pull "$docker_tag";
+if docker pull "$docker_tag" >> output.log 2>&1;
 then
 	exit
 fi
