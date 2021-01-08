@@ -41,6 +41,13 @@ Using the docker tag from subsequent scripts
 
 Once the Docker image is built and tagged, the name of the tag will be written to a file called `docker-tag` within the current working directory. This can then be read by a subsequent script.
 
+Version caching php-build
+-------------------------
+
+This repo, `php-build` shouldn't change very regularly, but when it does, the entire build pipeline of dependent repositories will need refreshing. This is done by adding the version of `php-build` to the end of build package names. When a new release is made that affects php-build functionality, the variable at the top of `php-build.bash` can be updated to invalidate any caches.
+
+Within other repositories that use `php-build`, they can refer to the specific version of the script by addressing its git commit hash. For example: https://raw.githubusercontent.com/php-actions/php-build/27be075494ae8a9bc0d10deb408e37b197986b8a/php-build.bash
+
 ***
 
 If you found this repository helpful, please consider [sponsoring the developer][sponsor].
