@@ -44,7 +44,7 @@ then
 fi
 base_image="${base_image}cli-alpine"
 dockerfile="FROM ${base_image}
-RUN apk add --update --no-cache zip git bash"
+RUN apk add --update --no-cache zip git bash openssh"
 
 base_repo="$1"
 
