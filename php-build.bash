@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+php_build_version="build2"
+
 # Check for required variables:
 if [ "$#" -lt 1 ]; then
     echo "Must pass argument 1: the name of the action currently running"
@@ -69,6 +71,7 @@ do
 	dockerfile="${dockerfile} $ext"
 	dockerfile_unique="${dockerfile_unique}-${ext}"
 done
+dockerfile_unique="${dockerfile_unique}-${php_build_version}"
 
 # Remove illegal characters and make lowercase:
 GITHUB_REPOSITORY="${GITHUB_REPOSITORY,,}"
