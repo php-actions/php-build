@@ -58,7 +58,7 @@ echo "${ACTION_TOKEN}" | docker login docker.pkg.github.com -u "${GITHUB_ACTOR}"
 if [ -n "$ACTION_PHP_EXTENSIONS" ]
 then
 	dockerfile="${dockerfile}
-ADD https://raw.githubusercontent.com/mlocati/docker-php-extension-installer/master/install-php-extensions /usr/local/bin/"
+ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/"
 	dockerfile="${dockerfile}
 RUN chmod +x /usr/local/bin/install-php-extensions && sync && install-php-extensions"
 fi
