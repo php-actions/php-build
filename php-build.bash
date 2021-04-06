@@ -50,7 +50,7 @@ base_repo="$1"
 
 # We log into the Github docker repository on behalf of the user that is
 # running the action (this could be anyone, outside of the php-actions organisation).
-echo "${ACTION_TOKEN}" | docker login docker.pkg.github.com -u "${GITHUB_ACTOR}" --password-stdin >> output.log 2>&1
+echo "${ACTION_TOKEN}" | docker login ghcr.io -u "${GITHUB_ACTOR}" --password-stdin >> output.log 2>&1
 
 # If there are any extensions to be installed, we do this using the
 # install-php-extensions tool. If there are not extensions required, we don't
@@ -85,7 +85,7 @@ repo_without_org=$(echo "$GITHUB_REPOSITORY" | sed "s/[^\/]*\///")
 # Note: The GITHUB_REPOSITORY is the repo where the action is running, nothing
 # to do with the php-actions organisation. This means that the image is pushed
 # onto a user's Github profile (currently not shared between other users).
-docker_tag="docker.pkg.github.com/${GITHUB_REPOSITORY}/php-actions_${base_repo}_${repo_without_org}:${dockerfile_unique}"
+docker_tag="ghcr.io/${GITHUB_REPOSITORY}/php-actions_${base_repo}_${repo_without_org}:${dockerfile_unique}"
 echo "$docker_tag" > ./docker_tag
 
 # Attempt to pull the existing Docker image, if it exists. If the image has
