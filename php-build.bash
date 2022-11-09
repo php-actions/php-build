@@ -110,4 +110,7 @@ echo "$dockerfile" >> output.log 2>&1
 docker build --tag "$docker_tag" --cache-from "$docker_tag" --file Dockerfile-php-build . >> output.log 2>&1
 # Update the user's repository with the customised docker image, ready for the
 # next Github Actions run.
-docker push "$docker_tag" >> output.log 2>&1
+if ! docker push "$docker_tag" >> output.log 2>&1; then
+	echo "WARNING: Failed to push Docker image to \"$docker_tag\", this is probably due to missing permissions on GitHub." >> output.log 2>&1
+	echo "Will continue as this is just an optimization to improve speed of next build." >> output.log 2>&1
+fi
