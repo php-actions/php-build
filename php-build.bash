@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-php_build_version="build2.1.0"
+php_build_version="build3.0.0-RC1"
 
 # Check for required variables:
 if [ "$#" -lt 1 ]; then
@@ -85,7 +85,7 @@ repo_without_org=$(echo "$GITHUB_REPOSITORY" | sed "s/[^\/]*\///")
 # Note: The GITHUB_REPOSITORY is the repo where the action is running, nothing
 # to do with the php-actions organisation. This means that the image is pushed
 # onto a user's Github profile (currently not shared between other users).
-docker_tag="docker.pkg.github.com/${GITHUB_REPOSITORY}/php-actions_${base_repo}_${repo_without_org}:${dockerfile_unique}"
+docker_tag="ghcr.io/${GITHUB_REPOSITORY}/php-actions_${base_repo}_${repo_without_org}:${dockerfile_unique}"
 echo "$docker_tag" > ./docker_tag
 
 # Attempt to pull the existing Docker image, if it exists. If the image has
