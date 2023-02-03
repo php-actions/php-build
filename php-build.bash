@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-php_build_version="build2.1.0"
+php_build_version="build2.1.1"
 
 # Check for required variables:
 if [ "$#" -lt 1 ]; then
@@ -72,6 +72,9 @@ do
 	dockerfile_unique="${dockerfile_unique}-${ext}"
 done
 dockerfile_unique="${dockerfile_unique}-${php_build_version}"
+
+dockerfile="${dockerfile}
+ADD ./php-build.ini /usr/local/etc/php/conf.d"
 
 # Remove illegal characters and make lowercase:
 GITHUB_REPOSITORY="${GITHUB_REPOSITORY,,}"
