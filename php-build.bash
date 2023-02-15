@@ -113,10 +113,10 @@ then
 	echo "Dockerfile:"
 	echo "$dockerfile"
 	echo docker build --tag "$docker_tag" --cache-from "$docker_tag" --file Dockerfile-php-build .
-	docker build --tag "$docker_tag" --cache-from "$docker_tag" --file Dockerfile-php-build .
-else
-	docker build --tag "$docker_tag" --cache-from "$docker_tag" --file Dockerfile-php-build . >> output.log 2>&1
+
 fi
+
+docker build --tag "$docker_tag" --cache-from "$docker_tag" --file Dockerfile-php-build . #>> output.log 2>&1
 
 # Update the user's repository with the customised docker image, ready for the
 # next Github Actions run.
