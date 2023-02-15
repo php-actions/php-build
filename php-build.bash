@@ -76,6 +76,11 @@ dockerfile_unique="${dockerfile_unique}-${php_build_version}"
 dockerfile="${dockerfile}
 ADD ./php-build.ini /usr/local/etc/php/conf.d"
 
+cat > ./php-build.ini<< EOF
+;INI settings to set within Github Action's build runner
+memory_limit=4G
+EOF
+
 # Remove illegal characters and make lowercase:
 GITHUB_REPOSITORY="${GITHUB_REPOSITORY,,}"
 dockerfile_unique="${dockerfile_unique// /_}"
