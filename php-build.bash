@@ -108,9 +108,16 @@ echo "Building PHP $ACTION_PHP_VERSION with extensions: $ACTION_PHP_EXTENSIONS .
 # need to re-build, and the `docker build` step should use the cached layers of
 # what has just been pulled.
 echo "$dockerfile" > Dockerfile-php-build
-echo "Dockerfile:" >> output.log 2>&1
-echo "$dockerfile" >> output.log 2>&1
-docker build --tag "$docker_tag" --cache-from "$docker_tag" --file Dockerfile-php-build . >> output.log 2>&1
+if [ ACTIONS_RUNNER_DEBUG = "true" ]
+then
+	echo "Dockerfile:"
+	echo "$dockerfile"
+	echo docker build --tag "$docker_tag" --cache-from "$docker_tag" --file Dockerfile-php-build .
+	docker build --tag "$docker_tag" --cache-from "$docker_tag" --file Dockerfile-php-build .
+else
+	docker build --tag "$docker_tag" --cache-from "$docker_tag" --file Dockerfile-php-build . >> output.log 2>&1
+fi
+
 # Update the user's repository with the customised docker image, ready for the
 # next Github Actions run.
 if ! docker push "$docker_tag" >> output.log 2>&1; then
