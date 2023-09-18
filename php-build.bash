@@ -34,6 +34,8 @@ then
 	exit 1
 fi
 
+current_user=$(whoami)
+
 # The dockerfile is created in-memory and written to disk at the end of this script.
 # Below, depending on the Action's inputs, more lines may be written to this dockerfile.
 # Zip and git are required for Composer to work correctly.
@@ -44,7 +46,9 @@ then
 fi
 base_image="${base_image}cli-alpine"
 dockerfile="FROM ${base_image}
-RUN apk add --update --no-cache bash coreutils git make openssh patch unzip zip"
+RUN apk add --update --no-cache bash coreutils git make openssh patch unzip zip
+RUN useradd -ms /bin/bash ${current_user}
+USER ${current_user}"
 
 base_repo="$1"
 
