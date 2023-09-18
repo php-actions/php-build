@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-php_build_version="build2.1.0"
+php_build_version="build2.1.1"
 
 # Check for required variables:
 if [ "$#" -lt 1 ]; then
@@ -77,6 +77,14 @@ do
 done
 dockerfile_unique="${dockerfile_unique}-${php_build_version}"
 
+dockerfile="${dockerfile}
+ADD ./php-build.ini /usr/local/etc/php/conf.d"
+
+cat > ./php-build.ini<< EOF
+;INI settings to set within Github Action's build runner
+memory_limit=4G
+EOF
+
 # Remove illegal characters and make lowercase:
 GITHUB_REPOSITORY="${GITHUB_REPOSITORY,,}"
 dockerfile_unique="${dockerfile_unique// /_}"
@@ -109,9 +117,16 @@ echo "Building PHP $ACTION_PHP_VERSION with extensions: $ACTION_PHP_EXTENSIONS .
 # need to re-build, and the `docker build` step should use the cached layers of
 # what has just been pulled.
 echo "$dockerfile" > Dockerfile-php-build
-echo "Dockerfile:" >> output.log 2>&1
-echo "$dockerfile" >> output.log 2>&1
+if [ ACTIONS_RUNNER_DEBUG = "true" ]
+then
+	echo "Dockerfile:"
+	echo "$dockerfile"
+	echo docker build --tag "$docker_tag" --cache-from "$docker_tag" --file Dockerfile-php-build .
+
+fi
+
 docker build --tag "$docker_tag" --cache-from "$docker_tag" --file Dockerfile-php-build . >> output.log 2>&1
+
 # Update the user's repository with the customised docker image, ready for the
 # next Github Actions run.
 if ! docker push "$docker_tag" >> output.log 2>&1; then
