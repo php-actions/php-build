@@ -35,6 +35,7 @@ then
 fi
 
 current_user=$(whoami)
+current_user_id=$(id $current_user -u)
 
 # The dockerfile is created in-memory and written to disk at the end of this script.
 # Below, depending on the Action's inputs, more lines may be written to this dockerfile.
@@ -47,7 +48,7 @@ fi
 base_image="${base_image}cli-alpine"
 dockerfile="FROM ${base_image}
 RUN apk add --update --no-cache bash coreutils git make openssh patch unzip zip
-RUN useradd -ms /bin/bash ${current_user}
+RUN adduser -D ${current_user} -u ${current_user_id}
 USER ${current_user}"
 
 base_repo="$1"
