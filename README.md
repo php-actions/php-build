@@ -39,7 +39,7 @@ The functionality of building PHP extensions is provided by [mlocati's docker-ph
 Using the docker tag from subsequent scripts
 --------------------------------------------
 
-Once the Docker image is built and tagged, the name of the tag will be written to a file called `docker-tag` within the current working directory. This can then be read by a subsequent script.
+Once the Docker image is built and tagged, the name of the tag will be written to a file called `docker_tag` within the current working directory. This can then be read by a subsequent script.
 
 Version caching php-build
 -------------------------
