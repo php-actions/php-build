@@ -104,7 +104,20 @@ echo "Pulling $docker_tag" >> output.log 2>&1
 # No need to continue building the image if the pull was successful.
 if docker pull "$docker_tag" >> output.log 2>&1;
 then
-	exit
+	# Unless the PHP version has an update...
+
+	# Pull latest PHP Docker image so we can check its version
+	echo "Pulling $base_image" >> output.log 2>&1
+	docker pull "$base_image" >> output.log 2>&1
+
+	# Check PHP version of the latest PHP tag and our tag
+	base_image_php_version=$(docker run -it "$base_image" php -r "echo PHP_VERSION;")
+	new_image_php_version=$(docker run -it "$docker_tag" php -r "echo PHP_VERSION;")
+
+	if new_image_php_version == base_image_php_version;
+	then
+		exit
+	fi
 fi
 
 echo "Building PHP $ACTION_PHP_VERSION with extensions: $ACTION_PHP_EXTENSIONS ..."
