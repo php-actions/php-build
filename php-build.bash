@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-php_build_version="build2.1.1"
+php_build_version="build2.1.2"
 
 # Check for required variables:
 if [ "$#" -lt 1 ]; then
