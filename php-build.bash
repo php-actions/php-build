@@ -88,8 +88,8 @@ dockerfile_unique="${dockerfile_unique,,}"
 repo_without_org=$(echo "$GITHUB_REPOSITORY" | sed "s/[^\/]*\///")
 
 # This tag will be used to identify the built dockerfile. Once it is built,
-# it should not need to be built again, so after the first Github Actions run
-# the build should be very quick.
+# it should not need to be built again unless there is a PHP update, so after
+# the first Github Actions run the build should be very quick.
 # Note: The GITHUB_REPOSITORY is the repo where the action is running, nothing
 # to do with the php-actions organisation. This means that the image is pushed
 # onto a user's Github profile (currently not shared between other users).
@@ -111,8 +111,8 @@ then
 	docker pull "$base_image" >> output.log 2>&1
 
 	# Check PHP versions of the latest PHP tag and our tag.
-	base_image_php_version=$(docker run -it "$base_image" php -r "echo PHP_VERSION;")
-	cached_image_php_version=$(docker run -it "$docker_tag" php -r "echo PHP_VERSION;")
+	base_image_php_version=$(docker run -i "$base_image" php -r "echo PHP_VERSION;")
+	cached_image_php_version=$(docker run -i "$docker_tag" php -r "echo PHP_VERSION;")
 
 	echo "Comparing $cached_image_php_version (cached) to $base_image_php_version (latest)." >> output.log 2>&1
 
