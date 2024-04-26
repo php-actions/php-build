@@ -117,7 +117,7 @@ then
 	echo "Comparing $cached_image_php_version (cached) to $base_image_php_version (latest)." >> output.log 2>&1
 
 	# No need to continue building if our image already exists and PHP is up-to-date.
-	if cached_image_php_version == base_image_php_version;
+	if [ $cached_image_php_version == $base_image_php_version ];
 	then
 		exit
 	fi
