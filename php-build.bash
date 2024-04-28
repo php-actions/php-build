@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-php_build_version="build2.1.1"
+php_build_version="build2.2.1"
 
 # Check for required variables:
 if [ "$#" -lt 1 ]; then
@@ -88,8 +88,8 @@ dockerfile_unique="${dockerfile_unique,,}"
 repo_without_org=$(echo "$GITHUB_REPOSITORY" | sed "s/[^\/]*\///")
 
 # This tag will be used to identify the built dockerfile. Once it is built,
-# it should not need to be built again, so after the first Github Actions run
-# the build should be very quick.
+# it should not need to be built again unless there is a PHP update, so after
+# the first Github Actions run the build should be very quick.
 # Note: The GITHUB_REPOSITORY is the repo where the action is running, nothing
 # to do with the php-actions organisation. This means that the image is pushed
 # onto a user's Github profile (currently not shared between other users).
@@ -104,7 +104,23 @@ echo "Pulling $docker_tag" >> output.log 2>&1
 # No need to continue building the image if the pull was successful.
 if docker pull "$docker_tag" >> output.log 2>&1;
 then
-	exit
+	# Unless the PHP version has an update...
+
+	# Pull latest PHP Docker image so we can check its version.
+	echo "Pulling $base_image" >> output.log 2>&1
+	docker pull "$base_image" >> output.log 2>&1
+
+	# Check PHP versions of the latest PHP tag and our tag.
+	base_image_php_version=$(docker run -i "$base_image" php -r "echo PHP_VERSION;")
+	cached_image_php_version=$(docker run -i "$docker_tag" php -r "echo PHP_VERSION;")
+
+	echo "Comparing $cached_image_php_version (cached) to $base_image_php_version (latest)." >> output.log 2>&1
+
+	# No need to continue building if our image already exists and PHP is up-to-date.
+	if [ $cached_image_php_version == $base_image_php_version ];
+	then
+		exit
+	fi
 fi
 
 echo "Building PHP $ACTION_PHP_VERSION with extensions: $ACTION_PHP_EXTENSIONS ..."

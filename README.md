@@ -1,4 +1,4 @@
-# Fast builds for repositories using php-actions.
+# Fast builds for repositories using php-actions
 
 v1 of this repository used a totally different architecture and had different goals to the current version. Previously, a customised Dockerfile was used as the base for all php-actions repositories, but now php-actions workflows run as [composite run steps][composite], building a customised docker image per-application, based off the official PHP script.
 
@@ -25,7 +25,7 @@ Choosing the PHP version
 
 The `ACTION_PHP_VERSION` environment variable must be passed to the composite run step. This string must match any of the [officially supported PHP version numbers][tag-list] (version number only, with no derivative text, e.g. `8.0.1` or `8` rather than `8-cli`).
 
-The official Alpine CLI build of the requested version will be used as the image's base. 
+The official Alpine CLI build of the requested version will be used as the image's base.
 
 Enabling/disabling extensions
 -----------------------------
@@ -46,7 +46,7 @@ Version caching php-build
 
 This repo, `php-build` shouldn't change very regularly, but when it does, the entire build pipeline of dependent repositories will need refreshing. This is done by adding the version of `php-build` to the end of build package names. When a new release is made that affects php-build functionality, the variable at the top of `php-build.bash` can be updated to invalidate any caches.
 
-Within other repositories that use `php-build`, they can refer to the specific version of the script by addressing its git commit hash. For example: https://raw.githubusercontent.com/php-actions/php-build/27be075494ae8a9bc0d10deb408e37b197986b8a/php-build.bash
+Within other repositories that use `php-build`, they can refer to the specific version of the script by addressing its git commit hash. For example: <https://raw.githubusercontent.com/php-actions/php-build/27be075494ae8a9bc0d10deb408e37b197986b8a/php-build.bash>
 
 ***
 
@@ -57,5 +57,4 @@ If you found this repository helpful, please consider [sponsoring the developer]
 [tag-list]: https://github.com/docker-library/docs/blob/master/php/README.md#supported-tags-and-respective-dockerfile-links
 [mlocati]: https://github.com/mlocati/docker-php-extension-installer
 [mlocati-readme]: https://github.com/mlocati/docker-php-extension-installer#supported-php-extensions
-[issues]: https://github.com/php-actions/php-build/issues
 [sponsor]: https://github.com/sponsors/g105b
