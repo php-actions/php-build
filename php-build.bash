@@ -44,7 +44,9 @@ then
 fi
 base_image="${base_image}cli-alpine"
 dockerfile="FROM ${base_image}
-RUN apk add --update --no-cache bash coreutils git make openssh patch unzip zip"
+RUN apk add --update --no-cache bash coreutils git make openssh patch unzip zip
+# INI settings to set within Github Action's build runner
+RUN echo 'memory_limit=4G' > /usr/local/etc/php/conf.d/php-build.ini"
 
 base_repo="$1"
 
@@ -73,14 +75,6 @@ do
 done
 dockerfile_unique="${dockerfile_unique}-${php_build_version}"
 
-dockerfile="${dockerfile}
-ADD ./php-build.ini /usr/local/etc/php/conf.d"
-
-cat > ./php-build.ini<< EOF
-;INI settings to set within Github Action's build runner
-memory_limit=4G
-EOF
-
 # Remove illegal characters and make lowercase:
 GITHUB_REPOSITORY="${GITHUB_REPOSITORY,,}"
 dockerfile_unique="${dockerfile_unique// /_}"
@@ -102,23 +96,24 @@ echo "$docker_tag" > ./docker_tag
 echo "Pulling $docker_tag" >> output.log 2>&1
 
 # No need to continue building the image if the pull was successful.
-if docker pull "$docker_tag" >> output.log 2>&1;
-then
+if docker pull "$docker_tag" >> output.log 2>&1; then
 	# Unless the PHP version has an update...
 
 	# Pull latest PHP Docker image so we can check its version.
 	echo "Pulling $base_image" >> output.log 2>&1
-	docker pull "$base_image" >> output.log 2>&1
+	if docker pull "$base_image" >> output.log 2>&1; then
+		# Check PHP versions of the latest PHP tag and our tag.
+		base_image_php_version=$(docker run -i "$base_image" php -r "echo PHP_VERSION;")
+		cached_image_php_version=$(docker run -i "$docker_tag" php -r "echo PHP_VERSION;")
 
-	# Check PHP versions of the latest PHP tag and our tag.
-	base_image_php_version=$(docker run -i "$base_image" php -r "echo PHP_VERSION;")
-	cached_image_php_version=$(docker run -i "$docker_tag" php -r "echo PHP_VERSION;")
+		echo "Comparing $cached_image_php_version (cached) to $base_image_php_version (latest)." >> output.log 2>&1
 
-	echo "Comparing $cached_image_php_version (cached) to $base_image_php_version (latest)." >> output.log 2>&1
-
-	# No need to continue building if our image already exists and PHP is up-to-date.
-	if [ $cached_image_php_version == $base_image_php_version ];
-	then
+		# No need to continue building if our image already exists and PHP is up-to-date.
+		if [ $cached_image_php_version == $base_image_php_version ]; then
+			exit
+		fi
+	else
+		echo "Pulling from upstream failed, ignoring update check" >> output.log 2>&1
 		exit
 	fi
 fi
